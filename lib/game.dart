@@ -1,21 +1,28 @@
 import 'dart:math';
+import 'package:get/get.dart';
 
-List<int> heaps = [1, 2, 3];
-
+List<int> heaps = [1, 2, 3].obs;
 final List<int> numQueue = [3, 1, 2];
 int queueCurrentIndex = 0;
-int getCurrentNumPending() => numQueue[queueCurrentIndex];
+int selectedHeapToDivide = -1;
 final randomNumberGenerator = Random();
 bool isUserFirst = randomNumberGenerator.nextBool();
 
-void makeMove(int heapIndexToAdd, [int? heapIndexToHalve]){
+void setSelectedHeapToDivide(int index){
+  if (index >= heaps.length || index < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
+  selectedHeapToDivide = index;
+}
+
+int getCurrentNumPending({bool ignoreDivisionMove = false}) =>
+   isDivisionMovePerforming() && !ignoreDivisionMove ? heaps[selectedHeapToDivide]~/2 : numQueue[queueCurrentIndex];
+
+void makeMove(int heapIndexToAdd){
   if (heapIndexToAdd >= heaps.length || heapIndexToAdd < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
 
-  if (heapIndexToHalve != null){
-    if (heapIndexToHalve >= heaps.length || heapIndexToHalve < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
-
-    heaps[heapIndexToHalve] ~/= 2;
-    heaps[heapIndexToAdd] += heaps[heapIndexToHalve];
+  if (isDivisionMovePerforming()){
+    heaps[selectedHeapToDivide] ~/= 2;
+    heaps[heapIndexToAdd] += heaps[selectedHeapToDivide];
+    stopDivisionMove();
   }
   else {
     heaps[heapIndexToAdd] += getCurrentNumPending();
@@ -27,7 +34,14 @@ void makeMove(int heapIndexToAdd, [int? heapIndexToHalve]){
 void restart(){
   heaps = [1, 2, 3];
   queueCurrentIndex = 0;
+  selectedHeapToDivide = -1;
   isUserFirst = randomNumberGenerator.nextBool();
 }
+
+void stopDivisionMove(){
+  selectedHeapToDivide = -1;
+}
+
+bool isDivisionMovePerforming() => selectedHeapToDivide != -1;
 
 
