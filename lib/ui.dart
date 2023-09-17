@@ -1,10 +1,16 @@
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:game123/colors.dart';
 import 'game.dart';
 
 const double barWidth = 45;
 const double betweenSpace = 0.2;
-const List<Color> heapColors = [Colors.red, Colors.blue, Colors.green];
+List<Color> heapColors = [
+  AppColors.firstHeap,
+  AppColors.secondHeap,
+  AppColors.thirdHeap,
+];
 
 class HeapState{
   HeapState(this.index);
@@ -29,3 +35,5 @@ BarTooltipItem tooltipBar(BarChartGroupData group,
     ),
   );
 }
+
+CarouselController customCarouselController = CarouselController();

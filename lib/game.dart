@@ -5,8 +5,23 @@ List<int> heaps = [1, 2, 3].obs;
 final List<int> numQueue = [3, 1, 2];
 int queueCurrentIndex = 0;
 int selectedHeapToDivide = -1;
-final randomNumberGenerator = Random();
-bool isUserFirst = randomNumberGenerator.nextBool();
+enum GameStatus {
+  ended,
+  running
+}
+enum PlayerType {
+  human,
+  computer
+}
+var currentPlayerIndex = 0;
+var turnOrder = generateTurnOrder();
+
+PlayerType getCurrentPlayer() => turnOrder[currentPlayerIndex];
+
+GameStatus getGameStatus(){
+  if (wasMoveVictorious()) return GameStatus.running;
+  return GameStatus.ended;
+}
 
 void setSelectedHeapToDivide(int index){
   if (index >= heaps.length || index < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
@@ -15,6 +30,7 @@ void setSelectedHeapToDivide(int index){
 
 int getCurrentNumPending({bool ignoreDivisionMove = false}) =>
    isDivisionMovePerforming() && !ignoreDivisionMove ? heaps[selectedHeapToDivide]~/2 : numQueue[queueCurrentIndex];
+
 
 void makeMove(int heapIndexToAdd){
   if (heapIndexToAdd >= heaps.length || heapIndexToAdd < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
@@ -28,14 +44,18 @@ void makeMove(int heapIndexToAdd){
     heaps[heapIndexToAdd] += getCurrentNumPending();
   }
 
-  queueCurrentIndex = (queueCurrentIndex + 1) % 3;
+  if (wasMoveVictorious()) return;
+
+  queueCurrentIndex = (queueCurrentIndex + 1) % heaps.length;
+  currentPlayerIndex = (currentPlayerIndex + 1) % turnOrder.length;
 }
 
 void restart(){
   heaps = [1, 2, 3];
   queueCurrentIndex = 0;
   selectedHeapToDivide = -1;
-  isUserFirst = randomNumberGenerator.nextBool();
+  turnOrder = generateTurnOrder();
+  currentPlayerIndex = 0;
 }
 
 void stopDivisionMove(){
@@ -44,4 +64,17 @@ void stopDivisionMove(){
 
 bool isDivisionMovePerforming() => selectedHeapToDivide != -1;
 
+List<PlayerType> generateTurnOrder(){
+  final randomNumberGenerator = Random();
+  bool isUserFirst = randomNumberGenerator.nextBool();
+  if (isUserFirst){
+    return [PlayerType.human, PlayerType.computer];
+  }
+  return [PlayerType.computer, PlayerType.human];
+}
 
+bool wasMoveVictorious(){
+  List<int> sortedHeaps = heaps;
+  sortedHeaps.sort();
+  return sortedHeaps[0] == sortedHeaps[1];
+}

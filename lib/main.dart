@@ -1,9 +1,13 @@
 import 'package:game123/game_ui_binding.dart';
 import 'package:flutter/material.dart';
+import 'package:game123/settings_controller.dart';
 import 'package:get/get.dart';
-import 'home_page.dart';
+import 'package:get_storage/get_storage.dart';
+import 'pages/home_page.dart';
 
-void main() {
+Future<void> main() async {
+  await GetStorage.init();
+  Get.put(SettingsController());
   runApp(const MyApp());
 }
 
@@ -12,11 +16,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SettingsController>();
     return GetMaterialApp(
       title: '123 Game',
       initialBinding: GameUiBinding(),
       debugShowCheckedModeBanner: true,
-      theme: Get.isDarkMode? ThemeData.light(): ThemeData.dark(),
+      theme: controller.themeData,
       home: const HomePage(),
     );
   }

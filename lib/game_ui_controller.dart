@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:game123/ui.dart';
 import 'package:get/get.dart';
+import 'colors.dart';
 import 'components/floating_buttons.dart';
 import 'game.dart';
 
@@ -67,7 +68,7 @@ class GameUiController extends GetxController {
             ? heaps[index] +
             getCurrentNumPending(ignoreDivisionMove: true).toDouble()
             : getCurrentNumPending().toDouble(),
-        color: hoveredHeap == index ? Colors.yellow : heapColors[index],
+        color: hoveredHeap == index ? AppColors.hoveredHeap : heapColors[index],
         width: barWidth,
       ),
       BarChartRodData(
@@ -152,6 +153,9 @@ class GameUiController extends GetxController {
   void handleTouch(event, BarTouchResponse? barResponse) {
     debugPrint(event.toString());
     debugPrint("Hovered heap id: ${hoveredHeap.toString()}");
+
+    if (getGameStatus() == GameStatus.ended) return;
+
     handleHover(event, barResponse);
 
     // Handle only taps for now
@@ -176,6 +180,12 @@ class GameUiController extends GetxController {
     }
     else {
       makeMove(touchedHeapIndex);
+      if(wasMoveVictorious()){
+        // todo confetti animation
+      } else{
+        customCarouselController.nextPage();
+      }
+
     }
 
 
