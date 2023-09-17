@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_controller.dart';
+import 'package:confetti/confetti.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:game123/colors.dart';
@@ -37,3 +38,4 @@ BarTooltipItem tooltipBar(BarChartGroupData group,
 }
 
 CarouselController customCarouselController = CarouselController();
+ConfettiController confettiController = ConfettiController(duration: const Duration(seconds: 3),);

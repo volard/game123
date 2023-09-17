@@ -19,8 +19,8 @@ var turnOrder = generateTurnOrder();
 PlayerType getCurrentPlayer() => turnOrder[currentPlayerIndex];
 
 GameStatus getGameStatus(){
-  if (wasMoveVictorious()) return GameStatus.running;
-  return GameStatus.ended;
+  if (moveWasVictorious()) return GameStatus.ended;
+  return GameStatus.running;
 }
 
 void setSelectedHeapToDivide(int index){
@@ -36,15 +36,20 @@ void makeMove(int heapIndexToAdd){
   if (heapIndexToAdd >= heaps.length || heapIndexToAdd < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
 
   if (isDivisionMovePerforming()){
-    heaps[selectedHeapToDivide] ~/= 2;
-    heaps[heapIndexToAdd] += heaps[selectedHeapToDivide];
+    if (selectedHeapToDivide == heapIndexToAdd){
+      heaps[heapIndexToAdd] += getCurrentNumPending(ignoreDivisionMove: true);
+    }
+    else{
+      heaps[selectedHeapToDivide] ~/= 2;
+      heaps[heapIndexToAdd] += heaps[selectedHeapToDivide];
+    }
     stopDivisionMove();
   }
   else {
     heaps[heapIndexToAdd] += getCurrentNumPending();
   }
 
-  if (wasMoveVictorious()) return;
+  if (moveWasVictorious()) return;
 
   queueCurrentIndex = (queueCurrentIndex + 1) % heaps.length;
   currentPlayerIndex = (currentPlayerIndex + 1) % turnOrder.length;
@@ -73,8 +78,8 @@ List<PlayerType> generateTurnOrder(){
   return [PlayerType.computer, PlayerType.human];
 }
 
-bool wasMoveVictorious(){
-  List<int> sortedHeaps = heaps;
+bool moveWasVictorious(){
+  List<int> sortedHeaps = List.of(heaps);
   sortedHeaps.sort();
-  return sortedHeaps[0] == sortedHeaps[1];
+  return sortedHeaps[0] == sortedHeaps[1] || sortedHeaps[1]== sortedHeaps[2];
 }

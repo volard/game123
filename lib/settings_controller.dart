@@ -6,7 +6,7 @@ class SettingsController extends GetxController {
   late ThemeData themeData;
   final _themeKey = 'isDark';
 
-  final box = GetStorage();
+  final storage = GetStorage();
 
   @override // called when Get.put before running app
   void onInit() {
@@ -15,11 +15,17 @@ class SettingsController extends GetxController {
   }
 
   void _restoreTheme() {
-    bool isDark = box.read(_themeKey) ?? true;
+    storage.writeIfNull('_themeKey', Get.isDarkMode);
+    bool isDark = storage.read(_themeKey) ?? Get.isDarkMode;
     themeData = isDark ? ThemeData.dark() : ThemeData.light();
   }
 
+  void changeTheme() {
+    Get.changeTheme(Get.isDarkMode ? ThemeData.light() : ThemeData.dark());
+    storeThemeSetting(isDark: Get.isDarkMode);
+  }
+
   void storeThemeSetting({required bool isDark}) {
-    box.write(_themeKey, isDark);
+    storage.write(_themeKey, isDark);
   }
 }

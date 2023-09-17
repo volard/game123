@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:game123/components/confetti.dart';
 import 'package:game123/components/queue_carousel.dart';
 import 'package:game123/game.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,6 @@ class HomePage extends GetView<GameUiController> {
   Widget build(BuildContext context) {
     return GetBuilder<GameUiController>(
       builder: (controller) => Scaffold(
-        // backgroundColor: Colors.black38,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -21,6 +21,7 @@ class HomePage extends GetView<GameUiController> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  confetti(),
                   Expanded(
                       child: BarChart(
                     controller.barChartData,
@@ -45,7 +46,8 @@ class HomePage extends GetView<GameUiController> {
                                 //   borderRadius: BorderRadius.circular(5.0),
                                 // )
                         )
-                            : const SizedBox.shrink())
+                            : const SizedBox.shrink()),
+                        Text(getCurrentPlayer().toString(), style: const TextStyle(color: Colors.white),)
                       ],
                     ),
                   )

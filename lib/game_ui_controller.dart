@@ -120,13 +120,13 @@ class GameUiController extends GetxController {
 
   List<Widget> floatingButtons() {
     var buttons = [
-      restartFloatingButton,
+      restartFloatingButton(),
       const SizedBox(height: 10,),
-      changeThemeFloatingButton,
+      changeThemeFloatingButton(),
       const SizedBox(height: 10,),
     ];
 
-    if (isDivisionMovePerforming()) buttons.add(cancelFloatingButton);
+    if (isDivisionMovePerforming()) buttons.add(cancelFloatingButton());
     return buttons;
   }
 
@@ -151,8 +151,6 @@ class GameUiController extends GetxController {
   }
 
   void handleTouch(event, BarTouchResponse? barResponse) {
-    debugPrint(event.toString());
-    debugPrint("Hovered heap id: ${hoveredHeap.toString()}");
 
     if (getGameStatus() == GameStatus.ended) return;
 
@@ -173,19 +171,25 @@ class GameUiController extends GetxController {
     if (barResponse.spot!.touchedRodDataIndex != 0) return;
 
     int touchedHeapIndex = barResponse.spot!.touchedBarGroupIndex;
-    debugPrint("Touched heap id: $touchedHeapIndex");
 
     if (heaps[touchedHeapIndex].isEven && !isDivisionMovePerforming()) {
       selectedHeapToDivide = touchedHeapIndex;
     }
     else {
       makeMove(touchedHeapIndex);
-      if(wasMoveVictorious()){
-        // todo confetti animation
-      } else{
-        customCarouselController.nextPage();
-      }
 
+      if(moveWasVictorious()) {
+        if (getCurrentPlayer() == PlayerType.human) {
+          confettiController.play();
+          Get.snackbar("I'm sorry", "But you won");
+        }
+        else {
+          Get.snackbar("Congratulations", "You're lose 🗿");
+        }
+        hoveredHeap = -1;
+        selectedHeapToDivide = -1;
+      }
+        customCarouselController.nextPage();
     }
 
 
