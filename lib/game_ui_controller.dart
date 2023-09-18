@@ -62,6 +62,16 @@ class GameUiController extends GetxController {
           "Provide correct heap index between 0 and ${heaps.length - 1}");
     }
 
+    Color barColor;
+    BorderSide barBorder = const BorderSide(width: 0);
+    if (GetPlatform.isAndroid){
+      barColor = Colors.transparent;
+      barBorder = const BorderSide(color: Colors.yellow, width: 2);
+    }
+    else{
+      barColor = hoveredHeap != -1 ? Colors.transparent : heapColors[index];
+    }
+
     return BarChartGroupData(x: index, groupVertically: true, barRods: [
       BarChartRodData(
         toY: hoveredHeap == index
@@ -72,10 +82,10 @@ class GameUiController extends GetxController {
         width: barWidth,
       ),
       BarChartRodData(
-
+        borderSide: barBorder,
         fromY: heaps[index].toDouble() / 2 + betweenSpace,
         toY: heaps[index].toDouble(),
-        color: hoveredHeap != -1 ? Colors.transparent : heapColors[index],
+        color: barColor,
         width: barWidth,
       ),
     ],
@@ -154,7 +164,8 @@ class GameUiController extends GetxController {
 
     if (getGameStatus() == GameStatus.ended) return;
 
-    handleHover(event, barResponse);
+    // Hover effects weird on Android
+    if (!GetPlatform.isAndroid) handleHover(event, barResponse);
 
     // Handle only taps for now
     if (event is! FlTapUpEvent) return;
@@ -164,6 +175,7 @@ class GameUiController extends GetxController {
     if (barResponse == null || barResponse.spot == null) {
       stopDivisionMove();
       barChartData = getBarChartData();
+      update();
       return;
     }
 

@@ -39,15 +39,15 @@ class HomePage extends GetView<GameUiController> {
                         ),
                         (isDivisionMovePerforming()
                             ? numberCard(getCurrentNumPending(),
-                                // shapeBorder: RoundedRectangleBorder(
-                                //   side: const BorderSide(
-                                //     color: Colors.yellow,
-                                //   ),
-                                //   borderRadius: BorderRadius.circular(5.0),
-                                // )
+                                shapeBorder: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                    color: Colors.yellow,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                )
                         )
                             : const SizedBox.shrink()),
-                        Text(getCurrentPlayer().toString(), style: const TextStyle(color: Colors.white),)
+                        Container(margin: const EdgeInsets.only(left: 15), child: Icon(getCurrentPlayer() == PlayerType.computer ? Icons.android : Icons.person)),
                       ],
                     ),
                   )

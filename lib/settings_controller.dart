@@ -15,7 +15,6 @@ class SettingsController extends GetxController {
   }
 
   void _restoreTheme() {
-    storage.writeIfNull('_themeKey', Get.isDarkMode);
     bool isDark = storage.read(_themeKey) ?? Get.isDarkMode;
     themeData = isDark ? ThemeData.dark() : ThemeData.light();
   }

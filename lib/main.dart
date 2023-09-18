@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:game123/game_ui_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:game123/settings_controller.dart';
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      SystemUiOverlay.bottom
+    ]);
     final controller = Get.find<SettingsController>();
     return GetMaterialApp(
       title: '123 Game',

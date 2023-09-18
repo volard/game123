@@ -21,7 +21,7 @@ FloatingActionButton restartFloatingButton() => FloatingActionButton(
     Get.find<GameUiController>().barChartData = Get.find<GameUiController>().getBarChartData();
     Get.find<GameUiController>().update();
   },
-  child: const Icon(Icons.restart_alt),
+  child: const Icon(Icons.refresh),
 );
 
 FloatingActionButton changeThemeFloatingButton() => FloatingActionButton(
@@ -33,6 +33,6 @@ FloatingActionButton changeThemeFloatingButton() => FloatingActionButton(
     Get.find<SettingsController>().update();
     Get.find<GameUiController>().update();
   },
-  child: Get.isDarkMode ? Icon(Icons.sunny) : Icon(
+  child: Get.isDarkMode ? const Icon(Icons.sunny) : const Icon(
       Icons.nightlight),
 );
