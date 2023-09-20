@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:game123/game_ui_controller.dart';
-import 'package:game123/ui.dart';
+import 'package:game123/controllers/game_ui_controller.dart';
 import 'package:get/get.dart';
-import '../game.dart';
-import '../settings_controller.dart';
+import '../controllers/elements_controllers.dart';
+import '../game/game_logic.dart';
+import '../controllers/settings_controller.dart';
+import 'game_field.dart';
+
+List<Widget> floatingButtons() {
+  var buttons = [
+    restartFloatingButton(),
+    const SizedBox(height: 10,),
+    changeThemeFloatingButton(),
+    const SizedBox(height: 10,),
+  ];
+
+  if (isDivisionMovePerforming()) buttons.add(cancelFloatingButton());
+  return buttons;
+}
 
 FloatingActionButton cancelFloatingButton() => FloatingActionButton(
   onPressed: () {
     stopDivisionMove();
-    Get.find<GameUiController>().barChartData = Get.find<GameUiController>().getBarChartData();
+    Get.find<GameUiController>().gameWidget = gameField();
     Get.find<GameUiController>().update();
   },
   child: const Icon(Icons.cancel),
@@ -18,7 +31,7 @@ FloatingActionButton restartFloatingButton() => FloatingActionButton(
   onPressed: () {
     restart();
     customCarouselController.jumpToPage(0);
-    Get.find<GameUiController>().barChartData = Get.find<GameUiController>().getBarChartData();
+    Get.find<GameUiController>().gameWidget = gameField();
     Get.find<GameUiController>().update();
   },
   child: const Icon(Icons.refresh),
@@ -26,12 +39,7 @@ FloatingActionButton restartFloatingButton() => FloatingActionButton(
 
 FloatingActionButton changeThemeFloatingButton() => FloatingActionButton(
   onPressed: () {
-    debugPrint(Get.isDarkMode.toString());
-    // Get.changeTheme(ThemeData.light(useMaterial3: true));
-    // Get.changeTheme(Get.isDarkMode ? ThemeData.light() : ThemeData.dark());
     Get.find<SettingsController>().changeTheme();
-    Get.find<SettingsController>().update();
-    Get.find<GameUiController>().update();
   },
   child: Get.isDarkMode ? const Icon(Icons.sunny) : const Icon(
       Icons.nightlight),

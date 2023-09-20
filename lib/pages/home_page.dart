@@ -2,10 +2,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:game123/components/confetti.dart';
 import 'package:game123/components/queue_carousel.dart';
-import 'package:game123/game.dart';
+import 'package:game123/game/game_logic.dart';
 import 'package:get/get.dart';
+
+import '../components/floating_buttons.dart';
 import '../components/pending_number_card.dart';
-import '../game_ui_controller.dart';
+import '../controllers/game_ui_controller.dart';
 
 class HomePage extends GetView<GameUiController> {
   const HomePage({super.key});
@@ -24,7 +26,7 @@ class HomePage extends GetView<GameUiController> {
                   confetti(),
                   Expanded(
                       child: BarChart(
-                    controller.barChartData,
+                    controller.gameWidget,
                     swapAnimationDuration: const Duration(milliseconds: 250),
                     swapAnimationCurve: Curves.easeIn,
                   )),
@@ -58,8 +60,7 @@ class HomePage extends GetView<GameUiController> {
         ),
         floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: controller
-                .floatingButtons()), // This trailing comma makes auto-formatting nicer for build methods.
+            children: floatingButtons()), // This trailing comma makes auto-formatting nicer for build methods.
       ),
     );
   }

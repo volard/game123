@@ -1,6 +1,6 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import '../ui.dart';
+import '../controllers/elements_controllers.dart';
 
 ConfettiWidget confetti() => ConfettiWidget(
       blastDirectionality: BlastDirectionality.explosive,

@@ -5,6 +5,7 @@ List<int> heaps = [1, 2, 3].obs;
 final List<int> numQueue = [3, 1, 2];
 int queueCurrentIndex = 0;
 int selectedHeapToDivide = -1;
+bool isFirstMove = true;
 enum GameStatus {
   ended,
   running
@@ -13,6 +14,7 @@ enum PlayerType {
   human,
   computer
 }
+
 var currentPlayerIndex = 0;
 var turnOrder = generateTurnOrder();
 
@@ -33,6 +35,7 @@ int getCurrentNumPending({bool ignoreDivisionMove = false}) =>
 
 
 void makeMove(int heapIndexToAdd){
+  isFirstMove = false;
   if (heapIndexToAdd >= heaps.length || heapIndexToAdd < 0) throw ArgumentError("Provide correct heap index between 0 and ${heaps.length-1}");
 
   if (isDivisionMovePerforming()){
@@ -56,6 +59,7 @@ void makeMove(int heapIndexToAdd){
 }
 
 void restart(){
+  isFirstMove = true;
   heaps = [1, 2, 3];
   queueCurrentIndex = 0;
   selectedHeapToDivide = -1;
