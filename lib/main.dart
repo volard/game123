@@ -1,6 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:game123/game/game_logic.dart';
-import 'package:game123/game/game_solver.dart';
 import 'package:game123/game_ui_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:game123/controllers/settings_controller.dart';
@@ -10,13 +8,9 @@ import 'package:get_storage/get_storage.dart';
 import 'pages/home_page.dart';
 
 Future<void> main() async {
-
-  debugPrint(getDecisionLayer(gameState: [1,2,3], pendingNumber: getCurrentNumPending()).toString());
-
-  // await GetStorage.init();
-  // Get.put(SettingsController());
-
-  // runApp(const MyApp());
+  await GetStorage.init();
+  Get.put(SettingsController());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

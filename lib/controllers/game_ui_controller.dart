@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:game123/game/game_solver.dart';
 import 'package:game123/game/game_ui.dart';
 import 'package:get/get.dart';
 
@@ -31,7 +33,7 @@ class GameUiController extends GetxController {
     update();
   }
 
-  void handleTouch(event, BarTouchResponse? barResponse) {
+  handleTouch(event, BarTouchResponse? barResponse) async {
 
     if (getGameStatus() == GameStatus.ended) return;
 
@@ -42,7 +44,6 @@ class GameUiController extends GetxController {
     if (event is! FlTapUpEvent) return;
 
     // Cancel complex moves
-    // var controller = Get.find<GameUiController>();
     if (barResponse == null || barResponse.spot == null) {
       stopDivisionMove();
       gameWidget = gameField();
@@ -62,21 +63,24 @@ class GameUiController extends GetxController {
     else {
       makeMove(touchedHeapIndex);
 
-      if(moveWasVictorious()) {
-        if (getCurrentPlayer() == PlayerType.human) {
-          confettiController.play();
-          Get.snackbar("I'm sorry", "But you won");
-        }
-        else {
-          Get.snackbar("Congratulations", "You're lose 🗿");
-        }
+      if(moveWasVictorious(heaps: heaps)) {
+        confettiController.play();
+        Get.snackbar("Nice bro", "You won");
         hoveredHeap = -1;
         selectedHeapToDivide = -1;
       }
-        customCarouselController.nextPage();
+      else{
+        GameState? newOne = await Future(getBestNextState()) ;
+        performAiMove(newGameState: newOne);
+
+          if(moveWasVictorious(heaps: heaps)) {
+            Get.snackbar("That shit", "You're lose 🗿");
+            hoveredHeap = -1;
+            selectedHeapToDivide = -1;
+          }
+        }
     }
 
-    debugPrint("Heaps: $heaps");
     gameWidget = gameField();
     update();
   }
